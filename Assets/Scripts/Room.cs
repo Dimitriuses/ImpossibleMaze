@@ -5,10 +5,22 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Assets.Scripts
+
+
+public class Room
 {
-    class Room
+    public Vector2Int Position { get; }
+    public ArrowDirection ArrowDirection { get; set; }
+
+
+    public Room(Vector2Int position, ArrowDirection arrowDirection)
     {
-        Vector2Int Position;
+        Position = position;
+        ArrowDirection = arrowDirection;
+    }
+    public Room(Vector2Int position)
+    {
+        Position = position;
     }
 }
+
