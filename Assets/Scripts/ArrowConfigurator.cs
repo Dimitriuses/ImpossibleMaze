@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using UnityEngine;
 
 public enum ArrowDirection
 {
@@ -25,7 +25,7 @@ public class ArrowConfigurator
     public Dictionary<ArrowDirection, float> DirectionToZRotation { get; }
     public Dictionary<int, ArrowDirection> IntToArrowDirection { get; }
 
-    private Random Random;
+    private System.Random Random;
 
     public ArrowConfigurator()
     {
@@ -57,12 +57,28 @@ public class ArrowConfigurator
             {2, ArrowDirection.Right},
             {3, ArrowDirection.Left}
         };
-        Random = new Random();
+        Random = new System.Random();
     }
 
     public ArrowDirection RandomDirection()
     {
         return IntToArrowDirection[Random.Next(0, 3)];
+    }
+
+    public Vector2Int MoveToDirection(Vector2Int positionIn,ArrowDirection direction)
+    {
+        switch (direction)
+        {
+            case ArrowDirection.Up:
+                return new Vector2Int(positionIn.x, positionIn.y + 1);
+            case ArrowDirection.Down:
+                return new Vector2Int(positionIn.x, positionIn.y - 1);
+            case ArrowDirection.Right:
+                return new Vector2Int(positionIn.x + 1, positionIn.y);
+            case ArrowDirection.Left:
+                return new Vector2Int(positionIn.x - 1, positionIn.y);
+        }
+        return positionIn;
     }
     
 }
