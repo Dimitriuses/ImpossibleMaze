@@ -11,6 +11,8 @@ public class MapControllerr : MonoBehaviour
     public Tilemap TilemapPersonages;
     [SerializeField]
     public Tilemap TilemapRooms;
+    [SerializeField]
+    public Sprite ArrowSprite;
 
     public List<Room> Rooms { get; set; }
     public List<Personage> Personages { get; set; }
@@ -19,11 +21,11 @@ public class MapControllerr : MonoBehaviour
     void Start()
     {
         ArrowConfigurator = new ArrowConfigurator();
-        Rooms = TileMeneger.GetRooms(TilemapArrows);
-        Rooms.ForEach(r => r.ArrowDirection = ArrowConfigurator.RandomDirection());
+        Rooms = TileMeneger.GetRooms(TilemapRooms,TilemapArrows,ArrowConfigurator);
+        //Rooms.ForEach(r => r.ArrowDirection = ArrowConfigurator.RandomDirection());
         Personages = TileMeneger.GetPersonages(TilemapPersonages);
-        TileMeneger.TestTilemapRooms(Rooms, ref TilemapRooms);
-        TileMeneger.UpdateTilemapRooms(Rooms, ref TilemapArrows, ArrowConfigurator);
+        //TileMeneger.TestTilemapRooms(Rooms, ref TilemapRooms);
+        TileMeneger.UpdateTilemapRooms(Rooms, ref TilemapArrows, ArrowConfigurator, ArrowSprite);
         
     }
     public void TurnButtonOnClick(int turnDirection)
@@ -39,7 +41,7 @@ public class MapControllerr : MonoBehaviour
                 break;
         }
         Rooms.ForEach(r => r.ArrowDirection = moveDirection[r.ArrowDirection]);
-        TileMeneger.UpdateTilemapRooms(Rooms, ref TilemapArrows, ArrowConfigurator);
+        TileMeneger.UpdateTilemapRooms(Rooms, ref TilemapArrows, ArrowConfigurator, ArrowSprite);
         //PersonageMove();
         StartCoroutine(PersonageMove());
     }

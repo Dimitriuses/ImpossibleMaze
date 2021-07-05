@@ -23,7 +23,7 @@ public class ArrowConfigurator
     public Dictionary<ArrowDirection, ArrowDirection> TurnLeft { get; }
     public Dictionary<ArrowDirection, ArrowDirection> TurnRight { get; }
     public Dictionary<ArrowDirection, float> DirectionToZRotation { get; }
-    public Dictionary<int, ArrowDirection> IntToArrowDirection { get; }
+    public Dictionary<float, ArrowDirection> ZRotationToArrowDirection { get; }
 
     private System.Random Random;
 
@@ -50,19 +50,19 @@ public class ArrowConfigurator
             {ArrowDirection.Right, 0f},
             {ArrowDirection.Left, 180f}
         };
-        IntToArrowDirection = new Dictionary<int, ArrowDirection>()
+        ZRotationToArrowDirection = new Dictionary<float, ArrowDirection>()
         {
-            {0, ArrowDirection.Up},
-            {1, ArrowDirection.Down },
-            {2, ArrowDirection.Right},
-            {3, ArrowDirection.Left}
+            {90f, ArrowDirection.Up},
+            {270f, ArrowDirection.Down },
+            {0f, ArrowDirection.Right},
+            {180f, ArrowDirection.Left}
         };
         Random = new System.Random();
     }
 
     public ArrowDirection RandomDirection()
     {
-        return IntToArrowDirection[Random.Next(0, 3)];
+        return (ArrowDirection)Random.Next(0, 3);
     }
 
     public Vector2Int MoveToDirection(Vector2Int positionIn,ArrowDirection direction)

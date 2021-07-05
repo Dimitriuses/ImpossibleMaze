@@ -8,19 +8,33 @@ using UnityEngine.Tilemaps;
 
 public class TileMeneger
 {
-    public static List<Room> GetRooms(Tilemap tilemap)
+    public static List<Room> GetRooms(Tilemap roomTilemap, Tilemap arrowTilemap, ArrowConfigurator configurator)
     {
         List<Room> returnRooms = new List<Room>();
-        BoundsInt size = tilemap.cellBounds;
+        BoundsInt size = roomTilemap.cellBounds;
         for (int col = size.position.y; col <= size.size.y; col++)
         {
             for (int row = size.position.x; row <= size.size.x; row++)
             {
-                
-                TileBase currentTile = tilemap.GetTile(new Vector3Int(row, col, 0));
-                if (currentTile != null)
+                Vector3Int position = new Vector3Int(row, col, 0);
+                Vector2Int savePosition = new Vector2Int(row, col);
+                TileBase currentRoomTile = roomTilemap.GetTile(position);
+                //TileBase curentArrowTile = arrowTilemap.GetTile(position);
+                if (currentRoomTile != null)
                 {
-                    returnRooms.Add(new Room(new Vector2Int(row, col), ArrowDirection.Right));
+                //    if (curentArrowTile != null)
+                //    {
+                //        Matrix4x4 tileTransform = arrowTilemap.GetTransformMatrix(position);
+                //        Vector3 tileZRotate = tileTransform.rotation.eulerAngles;
+                //        Debug.Log(tileZRotate);
+                //        ArrowDirection direction = configurator.ZRotationToArrowDirection[tileZRotate.z];
+                //        returnRooms.Add(new Room(savePosition, direction));
+                //    }
+                //    else
+                //    {
+                //        returnRooms.Add(new Room(savePosition, configurator.RandomDirection()));
+                //    }
+                    returnRooms.Add(new Room(savePosition, configurator.RandomDirection()));
                 }
             }
         }
@@ -45,17 +59,27 @@ public class TileMeneger
         return returnPersonage;
     }
 
-    public static void UpdateTilemapRooms(List<Room> rooms, ref Tilemap tilemap, ArrowConfigurator arrowConfigurator)
+    public static void UpdateTilemapRooms(List<Room> rooms, ref Tilemap tilemap, ArrowConfigurator arrowConfigurator, Sprite arrowSprite)
     {
+        //tilemap.ClearAllTiles();
         foreach (var room in rooms)
         {
+            Vector3Int position = new Vector3Int(room.Position.x, room.Position.y, 0);
+            //Tile tile = (Tile)ScriptableObject.CreateInstance(typeof(Tile));
+            //Tile loadTile = Resources.Load<Tile>("tile") as Tile;
+            //tile.sprite = arrowSprite;
+            //tile.transform = Matrix4x4.TRS(
+            //        Vector3.zero,
+            //        Quaternion.Euler(0f, 0f, arrowConfigurator.DirectionToZRotation[room.ArrowDirection]),
+            //        Vector3.one);
+
+            //tilemap.SetTile(position, loadTile);
             tilemap.SetTransformMatrix(
-                new Vector3Int(room.Position.x, room.Position.y, 0),
+                position,
                 Matrix4x4.TRS(
                     Vector3.zero,
                     Quaternion.Euler(0f, 0f, arrowConfigurator.DirectionToZRotation[room.ArrowDirection]),
-                    Vector3.one)
-                );
+                    Vector3.one));
         }
     }
     public static void UpdatePositionTilemapPersonage(List<UpdatePositionPersonageInput> inputs, ref Tilemap tilemap)

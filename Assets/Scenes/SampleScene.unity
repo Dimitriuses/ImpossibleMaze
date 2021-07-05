@@ -979,21 +979,21 @@ Tilemap:
   m_TileMatrixArray:
   - m_RefCount: 0
     m_Data:
-      e00: NaN
-      e01: 0
-      e02: 8e-45
-      e03: 3.23514e-14
-      e10: NaN
-      e11: 0
-      e12: 0
-      e13: 9.2e-43
-      e20: 474570850
-      e21: 0
-      e22: 1.5e-44
-      e23: 1.16e-43
-      e30: 9.2e-43
-      e31: 0
-      e32: 0
+      e00: 6.7072463e+34
+      e01: NaN
+      e02: 0
+      e03: 6.7072384e+34
+      e10: 1.1e-44
+      e11: NaN
+      e12: 7.34684e-40
+      e13: 1.1e-44
+      e20: 0
+      e21: 6e-45
+      e22: -1.459338e+24
+      e23: 0
+      e30: 0
+      e31: NaN
+      e32: 4.5904e-41
       e33: 0
   - m_RefCount: 84
     m_Data:
@@ -3554,6 +3554,7 @@ MonoBehaviour:
   TilemapArrows: {fileID: 173028888}
   TilemapPersonages: {fileID: 2034330036}
   TilemapRooms: {fileID: 258231888}
+  ArrowSprite: {fileID: 0}
 --- !u!1 &2034330033
 GameObject:
   m_ObjectHideFlags: 0
