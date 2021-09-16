@@ -17,11 +17,13 @@ public class MapControllerr : MonoBehaviour
     public List<Room> Rooms { get; set; }
     public List<Personage> Personages { get; set; }
     private ArrowConfigurator ArrowConfigurator;
+    private TileMeneger TileMeneger;
     // Start is called before the first frame update
     void Start()
     {
         ArrowConfigurator = new ArrowConfigurator();
-        Rooms = TileMeneger.GetRooms(TilemapRooms,TilemapArrows,ArrowConfigurator);
+        TileMeneger = new TileMeneger();
+        Rooms = TileMeneger.GetRooms(TilemapRooms, TilemapArrows, ArrowConfigurator, ArrowSprite);
         //Rooms.ForEach(r => r.ArrowDirection = ArrowConfigurator.RandomDirection());
         Personages = TileMeneger.GetPersonages(TilemapPersonages);
         //TileMeneger.TestTilemapRooms(Rooms, ref TilemapRooms);
