@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 728c9d9c34ea2614db1ee6222de8a599, type: 3}
+  m_Name: OneWall
+  m_EditorClassIdentifier: 
+  Type: 0
+  _icon: {fileID: 21300000, guid: 86528f7c3c1626e40960e46eab5b02b3, type: 3}
+  _up: 0
+  _down: 1
+  _right: 0
+  _left: 0

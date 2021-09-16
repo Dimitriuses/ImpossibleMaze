@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,14 @@ using UnityEngine.Tilemaps;
 
 public class TileMeneger
 {
-    public List<Room> GetRooms(Tilemap roomTilemap, Tilemap arrowTilemap, ArrowConfigurator configurator, Sprite arrowSprite)
+    private List<Wall> Walls;
+
+    public TileMeneger( List<Wall> walls)
+    {
+        Walls = walls;
+    }
+
+    public List<Room> GetRooms(Tilemap roomTilemap, Tilemap arrowTilemap, Tilemap wallTilemap, ArrowConfigurator configurator, Sprite arrowSprite)
     {
         List<Room> returnRooms = new List<Room>();
         BoundsInt size = roomTilemap.cellBounds;
@@ -20,13 +28,15 @@ public class TileMeneger
                 Vector2Int savePosition = new Vector2Int(row, col);
                 TileBase currentRoomTile = roomTilemap.GetTile(position);
                 TileBase curentArrowTile = arrowTilemap.GetTile(position);
+                TileBase curentWallTile = wallTilemap.GetTile(position);
                 if (currentRoomTile != null)
                 {
+                    Room room = null;
                     if (curentArrowTile == null)
                     {
                         Tile tile = CreateTile(arrowSprite);
                         arrowTilemap.SetTile(position, tile);
-                        returnRooms.Add(new Room(savePosition, configurator.RandomDirection()));
+                        room = new Room(savePosition, configurator.RandomDirection());
                     }
                     else
                     {
@@ -34,8 +44,18 @@ public class TileMeneger
                         Vector3 tileZRotate = tileTransform.rotation.eulerAngles;
                         //Debug.Log(tileZRotate);
                         ArrowDirection direction = configurator.ZRotationToArrowDirection[tileZRotate.z];
-                        returnRooms.Add(new Room(savePosition, direction));
+                        room = new Room(savePosition, direction);
                     }
+                    if(curentWallTile != null)
+                    {
+                        Sprite tmpSprite = wallTilemap.GetSprite(position);
+                        Wall wall = GetWallBySprite(tmpSprite);
+                        Matrix4x4 tileTransform = wallTilemap.GetTransformMatrix(position);
+                        Vector3 tileZRotate = tileTransform.rotation.eulerAngles;
+                        ArrowDirection direction = configurator.ZRotationToArrowDirection[tileZRotate.z];
+                        room.Walls = wall.GetWalls(direction);
+                    }
+                    returnRooms.Add(room);
                 }
             }
         }
@@ -107,4 +127,8 @@ public class TileMeneger
         return tile;
     }
 
+    private Wall GetWallBySprite(Sprite sprite)
+    {
+        return Walls.FirstOrDefault(w => w.UIIcon == sprite);
+    }
 }

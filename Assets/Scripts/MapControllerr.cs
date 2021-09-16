@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using Assets.Scripts;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -12,7 +14,13 @@ public class MapControllerr : MonoBehaviour
     [SerializeField]
     public Tilemap TilemapRooms;
     [SerializeField]
+    public Tilemap TilemapWalls;
+    [SerializeField]
     public Sprite ArrowSprite;
+
+    [Header("WallAssets")]
+    [SerializeField]
+    public List<Wall> Walls;
 
     public List<Room> Rooms { get; set; }
     public List<Personage> Personages { get; set; }
@@ -22,8 +30,8 @@ public class MapControllerr : MonoBehaviour
     void Start()
     {
         ArrowConfigurator = new ArrowConfigurator();
-        TileMeneger = new TileMeneger();
-        Rooms = TileMeneger.GetRooms(TilemapRooms, TilemapArrows, ArrowConfigurator, ArrowSprite);
+        TileMeneger = new TileMeneger(Walls);
+        Rooms = TileMeneger.GetRooms(TilemapRooms, TilemapArrows, TilemapWalls, ArrowConfigurator, ArrowSprite);
         //Rooms.ForEach(r => r.ArrowDirection = ArrowConfigurator.RandomDirection());
         Personages = TileMeneger.GetPersonages(TilemapPersonages);
         //TileMeneger.TestTilemapRooms(Rooms, ref TilemapRooms);
@@ -57,16 +65,34 @@ public class MapControllerr : MonoBehaviour
             if(room != null)
             {
                 Vector2Int newPosition = ArrowConfigurator.MoveToDirection(personage.Position, room.ArrowDirection);
-                inputs.Add(new UpdatePositionPersonageInput
+                Room next = Rooms.Find(r => r.Position == newPosition);
+                if(IsPosibleToPass(room, next))
                 {
-                    OldPosition = new Vector3Int(personage.Position.x, personage.Position.y, 0),
-                    NewPosition = new Vector3Int(newPosition.x, newPosition.y, 0)
-                });
-                personage.Position = newPosition;
+                    inputs.Add(new UpdatePositionPersonageInput
+                    {
+                        OldPosition = new Vector3Int(personage.Position.x, personage.Position.y, 0),
+                        NewPosition = new Vector3Int(newPosition.x, newPosition.y, 0)
+                    });
+                    personage.Position = newPosition;
+                }
+                else
+                {
+                    if(next != null)
+                    {
+                        inputs.Add(new UpdatePositionPersonageInput
+                        {
+                            OldPosition = new Vector3Int(personage.Position.x, personage.Position.y, 0),
+                            NewPosition = new Vector3Int(personage.Position.x, personage.Position.y, 0)
+                        });
+                    }
+                }
+                
             }
         }
         yield return new WaitForSeconds(0.3f);
+        //inputs = StopDublicate(inputs);
         TileMeneger.UpdatePositionTilemapPersonage(inputs, ref TilemapPersonages);
+        
     }
     private IEnumerator ArrowAnimate()
     {
@@ -77,6 +103,38 @@ public class MapControllerr : MonoBehaviour
             status += 0.1f;
         }
         
+    }
+
+    private bool IsPosibleToPass(Room curentRoom, Room nextRoom)
+    {
+        bool isNextExist = nextRoom != null;
+        bool isCurentPass = curentRoom.Walls?.IsPosibleToPass(curentRoom.ArrowDirection) ?? true;
+        bool isNextPass = nextRoom?.Walls?.IsPosibleToPass(ArrowConfigurator.Opposite[curentRoom.ArrowDirection]) ?? true;
+        return isCurentPass && isNextPass && isNextExist;
+    }
+
+    private List<UpdatePositionPersonageInput> StopDublicate(List<UpdatePositionPersonageInput> inputs)
+    {
+        var output = new List<UpdatePositionPersonageInput>();
+        Debug.Log("input"+ output);
+        output.AddRange(inputs);
+        bool isEnd = false;
+        while (!isEnd)
+        {
+            isEnd = true;
+            output.ForEach(input =>
+            {
+                if(output.Any(i=> i.NewPosition == input.NewPosition))
+                {
+                    List<UpdatePositionPersonageInput> tmp = output.Where(i => i.NewPosition == input.NewPosition).ToList();
+                    tmp.ForEach(i => i.Stop());
+                    isEnd = false;
+                }
+            });
+            
+        }
+        Debug.Log("output" + output);
+        return output;
     }
 
     // Update is called once per frame

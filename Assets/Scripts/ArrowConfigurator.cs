@@ -22,6 +22,7 @@ public class ArrowConfigurator
 {
     public Dictionary<ArrowDirection, ArrowDirection> TurnLeft { get; }
     public Dictionary<ArrowDirection, ArrowDirection> TurnRight { get; }
+    public Dictionary<ArrowDirection, ArrowDirection> Opposite { get; }
     public Dictionary<ArrowDirection, float> DirectionToZRotation { get; }
     public Dictionary<float, ArrowDirection> ZRotationToArrowDirection { get; }
 
@@ -42,6 +43,13 @@ public class ArrowConfigurator
             {ArrowDirection.Down, ArrowDirection.Left },
             {ArrowDirection.Right, ArrowDirection.Down },
             {ArrowDirection.Left, ArrowDirection.Up }
+        };
+        Opposite = new Dictionary<ArrowDirection, ArrowDirection>()
+        {
+            {ArrowDirection.Up, ArrowDirection.Down },
+            {ArrowDirection.Down, ArrowDirection.Up },
+            {ArrowDirection.Right, ArrowDirection.Left },
+            {ArrowDirection.Left, ArrowDirection.Right }
         };
         DirectionToZRotation = new Dictionary<ArrowDirection, float>()
         {

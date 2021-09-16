@@ -11,5 +11,10 @@ public class UpdatePositionPersonageInput
     public Vector3Int OldPosition { get; set; }
     public Vector3Int NewPosition { get; set; }
     public TileBase TileBase { get; set; }
+
+    public void Stop()
+    {
+        NewPosition = OldPosition;
+    }
 }
 
