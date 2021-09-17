@@ -7,20 +7,21 @@ using UnityEngine.Tilemaps;
 
 public class MapControllerr : MonoBehaviour
 {
-    [SerializeField]
-    public Tilemap TilemapArrows;
-    [SerializeField]
-    public Tilemap TilemapPersonages;
-    [SerializeField]
-    public Tilemap TilemapRooms;
-    [SerializeField]
-    public Tilemap TilemapWalls;
-    [SerializeField]
-    public Sprite ArrowSprite;
+    [SerializeField] private Tilemap TilemapArrows;
+    [SerializeField] private Tilemap TilemapPersonages;
+    [SerializeField] private Tilemap TilemapRooms;
+    [SerializeField] private Tilemap TilemapWalls;
+    [SerializeField] private Sprite ArrowSprite;
 
     [Header("WallAssets")]
-    [SerializeField]
-    public List<Wall> Walls;
+    [SerializeField] private List<Wall> Walls;
+
+    [Header("Animation settings")]
+    [SerializeField] private float ArrowAnimatimationDuration;
+    [SerializeField] private float PersonageAnimationDuration;
+    [SerializeField] private AnimationCurve ArrowAnimation;
+    [SerializeField] private AnimationCurve PersonageAnimation;
+
 
     public List<Room> Rooms { get; set; }
     public List<Personage> Personages { get; set; }
@@ -37,7 +38,7 @@ public class MapControllerr : MonoBehaviour
         //Rooms.ForEach(r => r.ArrowDirection = ArrowConfigurator.RandomDirection());
         Personages = TileMeneger.GetPersonages(TilemapPersonages);
         //TileMeneger.TestTilemapRooms(Rooms, ref TilemapRooms);
-        TileMeneger.UpdateTilemapRooms(Rooms, ref TilemapArrows, ArrowSprite);
+        TileMeneger.UpdateTilemapRooms(Rooms, ref TilemapArrows);
         
     }
     public void TurnButtonOnClick(int turnDirection)
@@ -52,13 +53,14 @@ public class MapControllerr : MonoBehaviour
                 moveDirection = ArrowConfigurator.TurnLeft;
                 break;
         }
-        Rooms.ForEach(r => r.ArrowDirection = moveDirection[r.ArrowDirection]);
-        TileMeneger.UpdateTilemapRooms(Rooms, ref TilemapArrows, ArrowSprite);
+        //Rooms.ForEach(r => r.ArrowDirection = moveDirection[r.ArrowDirection]);
+        //TileMeneger.UpdateTilemapRooms(Rooms, ref TilemapArrows);
         //PersonageMove();
-        StartCoroutine(PersonageMove());
+        StartCoroutine(ArrowAnimate((TurnDirection)turnDirection));
+        //StartCoroutine(PersonageMove());
     }
 
-    private IEnumerator PersonageMove()
+    private void PersonageMove()
     {
         List<UpdatePositionPersonageInput> inputs = new List<UpdatePositionPersonageInput>();
         foreach (var personage in Personages)
@@ -88,20 +90,61 @@ public class MapControllerr : MonoBehaviour
                 
             }
         }
-        yield return new WaitForSeconds(0.3f);
+        //yield return new WaitForSeconds(0.3f);
         //inputs = StopDublicate(inputs);
-        TileMeneger.UpdatePositionTilemapPersonage(inputs, ref TilemapPersonages);
-        
+        //TileMeneger.UpdatePositionTilemapPersonage(inputs, ref TilemapPersonages);
+        StartCoroutine(PersonageAnimate(inputs));
     }
-    private IEnumerator ArrowAnimate()
+    private IEnumerator ArrowAnimate(TurnDirection turnDirection)
     {
         float status = 0;
-        while (status >= 100f)
+        while (status < 100f)
         {
-            yield return new WaitForSeconds(0.3f);
-            status += 0.1f;
+            Rooms.ForEach(r =>
+            {
+                ArrowDirection curentDirection = r.ArrowDirection;
+                ArrowDirection nextDirection = ArrowConfigurator.TurnDirection(curentDirection, turnDirection);
+                float curentZRotate = RotateMeneger.DirectionToZRotation[ArrowConfigurator.ArrowToRotate[curentDirection]];
+                float nextZRotate = curentZRotate;
+                switch (turnDirection)
+                {
+                    case TurnDirection.Right:
+                        nextZRotate -= 90f;
+                        break;
+                    case TurnDirection.Left:
+                        nextZRotate += 90f;
+                        break;
+                    default:
+                        break;
+                }
+                float diffZRotate = nextZRotate - curentZRotate;
+                TileMeneger.RotateTile(
+                    ref TilemapArrows,
+                    new Vector3Int(r.Position.x, r.Position.y, 0),
+                    curentZRotate + diffZRotate * ArrowAnimation.Evaluate(status/100f));
+            });
+            yield return new WaitForSeconds(ArrowAnimatimationDuration/100f);
+            status ++;
         }
-        
+        Rooms.ForEach(r => r.ArrowDirection = ArrowConfigurator.TurnDirection(r.ArrowDirection, turnDirection));
+        TileMeneger.UpdateTilemapRooms(Rooms, ref TilemapArrows);
+        PersonageMove();
+    }
+
+    private IEnumerator PersonageAnimate(List<UpdatePositionPersonageInput> inputs)
+    {
+        float status = 0;
+        while (status < 100f)
+        {
+            inputs.ForEach(i =>
+            {
+                Vector3 diff = i.NewPosition - i.OldPosition;
+                TileMeneger.MoveTile(ref TilemapPersonages, i.OldPosition, diff * PersonageAnimation.Evaluate(status/100f));
+            });
+            yield return new WaitForSeconds(PersonageAnimationDuration/100f);
+            status ++;
+        }
+        TileMeneger.UpdatePositionTilemapPersonage(inputs, ref TilemapPersonages);
     }
 
     private bool IsPosibleToPass(Room curentRoom, Room nextRoom)

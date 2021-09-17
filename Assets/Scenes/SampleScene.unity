@@ -242,25 +242,25 @@ Tilemap:
   - m_RefCount: 0
     m_Data:
       e00: NaN
-      e01: -5.334709e+11
-      e02: -9.879998e-14
+      e01: -8.344307e-18
+      e02: -8.736906e+10
       e03: NaN
       e10: NaN
-      e11: 8.18e-43
-      e12: 8.18e-43
+      e11: 5.79e-43
+      e12: 5.79e-43
       e13: NaN
-      e20: -3.882541e-10
-      e21: -9.879998e-14
+      e20: 7.519639e+19
+      e21: -8.736906e+10
       e22: 1e-45
-      e23: -12.088624
-      e30: 4.5916e-41
-      e31: 8.18e-43
+      e23: -0.030743185
+      e30: 4.5911e-41
+      e31: 5.79e-43
       e32: 0
-      e33: 2.2351e-41
+      e33: 8.866e-42
   m_TileColorArray:
   - m_RefCount: 0
-    m_Data: {r: 0.0000000010903456, g: 0.0000000010903456, b: 0.0000000010903456,
-      a: 0.0000000010903456}
+    m_Data: {r: 0.0000000011372663, g: 0.0000000011372663, b: 0.0000000011372663,
+      a: 0.0000000011372663}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -2777,6 +2777,56 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 68964ffa0ef23de47a664bd771080ce5, type: 2}
   - {fileID: 11400000, guid: ed500c48d3a1fbc4abb9f80abeb05d66, type: 2}
   - {fileID: 11400000, guid: 04693708ff3282e419b54f7b21dd311a, type: 2}
+  ArrowAnimatimationDuration: 0.05
+  PersonageAnimationDuration: 0.05
+  ArrowAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  PersonageAnimation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2034330033
 GameObject:
   m_ObjectHideFlags: 0

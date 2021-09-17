@@ -86,7 +86,7 @@ public class TileMeneger
         return returnPersonage;
     }
 
-    public void UpdateTilemapRooms(List<Room> rooms, ref Tilemap tilemap, Sprite arrowSprite)
+    public void UpdateTilemapRooms(List<Room> rooms, ref Tilemap tilemap)
     {
         foreach (var room in rooms)
         {
@@ -98,6 +98,25 @@ public class TileMeneger
                     Quaternion.Euler(0f, 0f, RotateMeneger.DirectionToZRotation[ArrowConfigurator.ArrowToRotate[room.ArrowDirection]]),
                     Vector3.one));
         }
+    }
+
+    public void RotateTile(ref Tilemap tilemap, Vector3Int position, float zRotate)
+    {
+        tilemap.SetTransformMatrix(
+                position,
+                Matrix4x4.TRS(
+                    Vector3.zero,
+                    Quaternion.Euler(0f, 0f, zRotate),
+                    Vector3.one));
+    }
+    public void MoveTile(ref Tilemap tilemap, Vector3Int position, Vector3 move)
+    {
+        tilemap.SetTransformMatrix(
+               position,
+               Matrix4x4.TRS(
+                   move,
+                   Quaternion.Euler(0f, 0f, 0f),
+                   Vector3.one));
     }
     public void UpdatePositionTilemapPersonage(List<UpdatePositionPersonageInput> inputs, ref Tilemap tilemap)
     {

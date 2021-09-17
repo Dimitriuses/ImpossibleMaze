@@ -90,4 +90,17 @@ public class ArrowConfigurator
         return positionIn;
     }
     
+    public ArrowDirection TurnDirection(ArrowDirection arrowDirection ,TurnDirection turnDirection)
+    {
+        switch (turnDirection)
+        {
+            case global::TurnDirection.Right:
+                return TurnRight[arrowDirection];
+            case global::TurnDirection.Left:
+                return TurnLeft[arrowDirection];
+            default:
+                break;
+        }
+        return arrowDirection;
+    }
 }
