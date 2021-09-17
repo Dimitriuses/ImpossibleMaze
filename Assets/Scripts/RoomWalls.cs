@@ -13,6 +13,8 @@ namespace Assets.Scripts
         public bool Right { get; private set; }
         public bool Left { get; private set; }
 
+        public string FullStatus { get { return "Up: " + Up + " Down: " + Down + " Right: " + Right + " Left: " + Left;  } }
+
         public RoomWalls()
         {
             Up = false;
@@ -53,5 +55,6 @@ namespace Assets.Scripts
                     return false;
             }
         }
+
     }
 }

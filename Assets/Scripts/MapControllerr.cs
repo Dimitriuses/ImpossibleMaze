@@ -25,17 +25,19 @@ public class MapControllerr : MonoBehaviour
     public List<Room> Rooms { get; set; }
     public List<Personage> Personages { get; set; }
     private ArrowConfigurator ArrowConfigurator;
+    private RotateMeneger RotateMeneger;
     private TileMeneger TileMeneger;
     // Start is called before the first frame update
     void Start()
     {
         ArrowConfigurator = new ArrowConfigurator();
-        TileMeneger = new TileMeneger(Walls);
-        Rooms = TileMeneger.GetRooms(TilemapRooms, TilemapArrows, TilemapWalls, ArrowConfigurator, ArrowSprite);
+        RotateMeneger = new RotateMeneger();
+        TileMeneger = new TileMeneger(Walls, ArrowConfigurator, RotateMeneger);
+        Rooms = TileMeneger.GetRooms(TilemapRooms, TilemapArrows, TilemapWalls, ArrowSprite);
         //Rooms.ForEach(r => r.ArrowDirection = ArrowConfigurator.RandomDirection());
         Personages = TileMeneger.GetPersonages(TilemapPersonages);
         //TileMeneger.TestTilemapRooms(Rooms, ref TilemapRooms);
-        TileMeneger.UpdateTilemapRooms(Rooms, ref TilemapArrows, ArrowConfigurator, ArrowSprite);
+        TileMeneger.UpdateTilemapRooms(Rooms, ref TilemapArrows, ArrowSprite);
         
     }
     public void TurnButtonOnClick(int turnDirection)
@@ -51,7 +53,7 @@ public class MapControllerr : MonoBehaviour
                 break;
         }
         Rooms.ForEach(r => r.ArrowDirection = moveDirection[r.ArrowDirection]);
-        TileMeneger.UpdateTilemapRooms(Rooms, ref TilemapArrows, ArrowConfigurator, ArrowSprite);
+        TileMeneger.UpdateTilemapRooms(Rooms, ref TilemapArrows, ArrowSprite);
         //PersonageMove();
         StartCoroutine(PersonageMove());
     }
@@ -77,14 +79,11 @@ public class MapControllerr : MonoBehaviour
                 }
                 else
                 {
-                    if(next != null)
+                    inputs.Add(new UpdatePositionPersonageInput
                     {
-                        inputs.Add(new UpdatePositionPersonageInput
-                        {
-                            OldPosition = new Vector3Int(personage.Position.x, personage.Position.y, 0),
-                            NewPosition = new Vector3Int(personage.Position.x, personage.Position.y, 0)
-                        });
-                    }
+                        OldPosition = new Vector3Int(personage.Position.x, personage.Position.y, 0),
+                        NewPosition = new Vector3Int(personage.Position.x, personage.Position.y, 0)
+                    });
                 }
                 
             }
@@ -107,9 +106,15 @@ public class MapControllerr : MonoBehaviour
 
     private bool IsPosibleToPass(Room curentRoom, Room nextRoom)
     {
+        ArrowDirection curentArrowDirection = curentRoom.ArrowDirection;
+        ArrowDirection opositeArrowDirection = ArrowConfigurator.Opposite[curentArrowDirection];
         bool isNextExist = nextRoom != null;
-        bool isCurentPass = curentRoom.Walls?.IsPosibleToPass(curentRoom.ArrowDirection) ?? true;
-        bool isNextPass = nextRoom?.Walls?.IsPosibleToPass(ArrowConfigurator.Opposite[curentRoom.ArrowDirection]) ?? true;
+        bool isCurentPass = curentRoom.Walls?.IsPosibleToPass(curentArrowDirection) ?? true;
+        
+        bool isNextPass = nextRoom?.Walls?.IsPosibleToPass(opositeArrowDirection) ?? true;
+        //Debug.Log(isNextExist + " " + isCurentPass + " " + isNextPass);
+        //Debug.Log(curentRoom.Walls?.FullStatus);
+        //Debug.Log(curentArrowDirection + " " + opositeArrowDirection);
         return isCurentPass && isNextPass && isNextExist;
     }
 

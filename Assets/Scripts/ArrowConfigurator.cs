@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,8 +24,8 @@ public class ArrowConfigurator
     public Dictionary<ArrowDirection, ArrowDirection> TurnLeft { get; }
     public Dictionary<ArrowDirection, ArrowDirection> TurnRight { get; }
     public Dictionary<ArrowDirection, ArrowDirection> Opposite { get; }
-    public Dictionary<ArrowDirection, float> DirectionToZRotation { get; }
-    public Dictionary<float, ArrowDirection> ZRotationToArrowDirection { get; }
+    public Dictionary<ArrowDirection, RotateDirection> ArrowToRotate { get; }
+    public Dictionary<RotateDirection, ArrowDirection> RotateToArrow { get; }
 
     private System.Random Random;
 
@@ -51,19 +52,19 @@ public class ArrowConfigurator
             {ArrowDirection.Right, ArrowDirection.Left },
             {ArrowDirection.Left, ArrowDirection.Right }
         };
-        DirectionToZRotation = new Dictionary<ArrowDirection, float>()
+        ArrowToRotate = new Dictionary<ArrowDirection, RotateDirection>()
         {
-            {ArrowDirection.Up, 90f },
-            {ArrowDirection.Down, 270f},
-            {ArrowDirection.Right, 0f},
-            {ArrowDirection.Left, 180f}
+            {ArrowDirection.Up, RotateDirection.Left},
+            {ArrowDirection.Down, RotateDirection.Right},
+            {ArrowDirection.Right, RotateDirection.Up},
+            {ArrowDirection.Left, RotateDirection.Down}
         };
-        ZRotationToArrowDirection = new Dictionary<float, ArrowDirection>()
+        RotateToArrow = new Dictionary<RotateDirection, ArrowDirection>()
         {
-            {90f, ArrowDirection.Up},
-            {270f, ArrowDirection.Down },
-            {0f, ArrowDirection.Right},
-            {180f, ArrowDirection.Left}
+            {RotateDirection.Left, ArrowDirection.Up},
+            {RotateDirection.Right, ArrowDirection.Down},
+            {RotateDirection.Up, ArrowDirection.Right},
+            {RotateDirection.Down, ArrowDirection.Left}
         };
         Random = new System.Random();
     }

@@ -10,13 +10,17 @@ using UnityEngine.Tilemaps;
 public class TileMeneger
 {
     private List<Wall> Walls;
+    private ArrowConfigurator ArrowConfigurator;
+    private RotateMeneger RotateMeneger;
 
-    public TileMeneger( List<Wall> walls)
+    public TileMeneger( List<Wall> walls, ArrowConfigurator arrowConfigurator, RotateMeneger rotateMeneger)
     {
         Walls = walls;
+        ArrowConfigurator = arrowConfigurator;
+        RotateMeneger = rotateMeneger;
     }
 
-    public List<Room> GetRooms(Tilemap roomTilemap, Tilemap arrowTilemap, Tilemap wallTilemap, ArrowConfigurator configurator, Sprite arrowSprite)
+    public List<Room> GetRooms(Tilemap roomTilemap, Tilemap arrowTilemap, Tilemap wallTilemap, Sprite arrowSprite)
     {
         List<Room> returnRooms = new List<Room>();
         BoundsInt size = roomTilemap.cellBounds;
@@ -36,15 +40,15 @@ public class TileMeneger
                     {
                         Tile tile = CreateTile(arrowSprite);
                         arrowTilemap.SetTile(position, tile);
-                        room = new Room(savePosition, configurator.RandomDirection());
+                        room = new Room(savePosition, ArrowConfigurator.RandomDirection());
                     }
                     else
                     {
                         Matrix4x4 tileTransform = arrowTilemap.GetTransformMatrix(position);
                         Vector3 tileZRotate = tileTransform.rotation.eulerAngles;
                         //Debug.Log(tileZRotate);
-                        ArrowDirection direction = configurator.ZRotationToArrowDirection[tileZRotate.z];
-                        room = new Room(savePosition, direction);
+                        RotateDirection direction = RotateMeneger.ZRotationToDirection[tileZRotate.z];
+                        room = new Room(savePosition, ArrowConfigurator.RotateToArrow[direction]);
                     }
                     if(curentWallTile != null)
                     {
@@ -52,8 +56,10 @@ public class TileMeneger
                         Wall wall = GetWallBySprite(tmpSprite);
                         Matrix4x4 tileTransform = wallTilemap.GetTransformMatrix(position);
                         Vector3 tileZRotate = tileTransform.rotation.eulerAngles;
-                        ArrowDirection direction = configurator.ZRotationToArrowDirection[tileZRotate.z];
+                        RotateDirection direction = RotateMeneger.ZRotationToDirection[tileZRotate.z];
+                        //Debug.Log(tileZRotate + " " + direction);
                         room.Walls = wall.GetWalls(direction);
+                        //Debug.Log(room.Walls.FullStatus);
                     }
                     returnRooms.Add(room);
                 }
@@ -80,7 +86,7 @@ public class TileMeneger
         return returnPersonage;
     }
 
-    public void UpdateTilemapRooms(List<Room> rooms, ref Tilemap tilemap, ArrowConfigurator arrowConfigurator, Sprite arrowSprite)
+    public void UpdateTilemapRooms(List<Room> rooms, ref Tilemap tilemap, Sprite arrowSprite)
     {
         foreach (var room in rooms)
         {
@@ -89,7 +95,7 @@ public class TileMeneger
                 position,
                 Matrix4x4.TRS(
                     Vector3.zero,
-                    Quaternion.Euler(0f, 0f, arrowConfigurator.DirectionToZRotation[room.ArrowDirection]),
+                    Quaternion.Euler(0f, 0f, RotateMeneger.DirectionToZRotation[ArrowConfigurator.ArrowToRotate[room.ArrowDirection]]),
                     Vector3.one));
         }
     }

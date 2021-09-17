@@ -28,21 +28,21 @@ namespace Assets.Scripts
         [SerializeField] private bool _right;
         [SerializeField] private bool _left;
 
-        public RoomWalls GetWalls(ArrowDirection rotateDirection)
+        public RoomWalls GetWalls(RotateDirection rotateDirection)
         {
             bool[] tmp = new bool[] { Up, Right, Down, Left };
             switch (rotateDirection)
             {
-                case ArrowDirection.Up:
+                case RotateDirection.Up:
                     break;
-                case ArrowDirection.Down:
-                    tmp.Skip(2).Concat(tmp.Take(2)).ToArray();
+                case RotateDirection.Down:
+                    tmp = tmp.Skip(2).Concat(tmp.Take(2)).ToArray();
                     break;
-                case ArrowDirection.Right:
-                    tmp.Skip(1).Concat(tmp.Take(1)).ToArray();
+                case RotateDirection.Right:
+                    tmp = tmp.Skip(1).Concat(tmp.Take(1)).ToArray();
                     break;
-                case ArrowDirection.Left:
-                    tmp.Skip(3).Concat(tmp.Take(3)).ToArray();
+                case RotateDirection.Left:
+                    tmp = tmp.Skip(3).Concat(tmp.Take(3)).ToArray();
                     break;
                 default:
                     break;
