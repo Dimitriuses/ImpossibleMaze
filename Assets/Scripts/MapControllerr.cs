@@ -123,8 +123,8 @@ public class MapControllerr : MonoBehaviour
                     new Vector3Int(r.Position.x, r.Position.y, 0),
                     curentZRotate + diffZRotate * ArrowAnimation.Evaluate(status/100f));
             });
-            yield return new WaitForSeconds(ArrowAnimatimationDuration/100f);
-            status ++;
+            yield return new WaitForSeconds(0.01f);
+            status += 1f/ArrowAnimatimationDuration;
         }
         Rooms.ForEach(r => r.ArrowDirection = ArrowConfigurator.TurnDirection(r.ArrowDirection, turnDirection));
         TileMeneger.UpdateTilemapRooms(Rooms, ref TilemapArrows);
@@ -141,8 +141,8 @@ public class MapControllerr : MonoBehaviour
                 Vector3 diff = i.NewPosition - i.OldPosition;
                 TileMeneger.MoveTile(ref TilemapPersonages, i.OldPosition, diff * PersonageAnimation.Evaluate(status/100f));
             });
-            yield return new WaitForSeconds(PersonageAnimationDuration/100f);
-            status ++;
+            yield return new WaitForSeconds(0.01f);
+            status += 1f/PersonageAnimationDuration;
         }
         TileMeneger.UpdatePositionTilemapPersonage(inputs, ref TilemapPersonages);
     }

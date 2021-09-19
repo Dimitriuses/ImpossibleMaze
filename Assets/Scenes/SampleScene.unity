@@ -2777,8 +2777,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 68964ffa0ef23de47a664bd771080ce5, type: 2}
   - {fileID: 11400000, guid: ed500c48d3a1fbc4abb9f80abeb05d66, type: 2}
   - {fileID: 11400000, guid: 04693708ff3282e419b54f7b21dd311a, type: 2}
-  ArrowAnimatimationDuration: 0.05
-  PersonageAnimationDuration: 0.05
+  ArrowAnimatimationDuration: 0.5
+  PersonageAnimationDuration: 0.5
   ArrowAnimation:
     serializedVersion: 2
     m_Curve:
