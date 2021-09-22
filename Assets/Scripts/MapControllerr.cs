@@ -89,6 +89,10 @@ public class MapControllerr : MonoBehaviour
                 }
                 
             }
+            else
+            {
+
+            }
         }
         //yield return new WaitForSeconds(0.3f);
         //inputs = StopDublicate(inputs);
